@@ -1,69 +1,63 @@
-#This file builds the Docker images for a React/NodeJS application and runs it as microservices on Docker containers
+# 🐳 Docker Compose setup for the SampleByJoe Application
+# This configuration builds and runs a simple React (frontend) and Node.js (backend)
+# application as microservices, alongside a MongoDB database.
+# All containers are networked together for seamless communication.
 
-#To ensure successful execution, clone this entire repository and execute this file while in the root folder of the cloned repository
-
-#It's also a requirement to have Docker and the docker-compose plugin installed in your environment
-
-#To launch this app without having to clone the entire repository,use the docker-compose.yaml file to run the app
-
-version: "3.8"
 
 services:
 
-  #Builds the frontend Docker image and creates the frontend microservice
-  brian-yolo-client:
-    image: brianbwire/brian-yolo-client:v1.0.0
+  # === Frontend Service ===
+  samplebyjoe-client:
+    image: joemunene/samplebyjoe-client:v1.0.0
     build: ./client
-    container_name: brian-yolo-client
+    container_name: samplebyjoe-client
     stdin_open: true
     tty: true
     ports:
       - "3000:3000"
-    depends_on: 
-      - brian-yolo-backend
+    depends_on:
+      - samplebyjoe-backend
     networks:
-      - app-net
+      - samplebyjoe-net
 
-  #Builds the backend Docker image and creates the backend microservice
-  brian-yolo-backend:
-    image: brianbwire/brian-yolo-backend:v1.0.0
+  # === Backend Service ===
+  samplebyjoe-backend:
+    image: joemunene/samplebyjoe-backend:v1.0.0
     build: ./backend
-    container_name: brian-yolo-backend
+    container_name: samplebyjoe-backend
     stdin_open: true
     tty: true
     restart: always
     ports:
       - "5000:5000"
-    depends_on: 
-      - app-ip-mongo
+    depends_on:
+      - samplebyjoe-mongo
     networks:
-      - app-net
+      - samplebyjoe-net
 
-  #Creates the database microservice
-  app-ip-mongo:
-    image: mongo
-    container_name: app-mongo
+  # === MongoDB Database ===
+  samplebyjoe-mongo:
+    image: mongo:6.0
+    container_name: samplebyjoe-mongo
     ports:
       - "27017:27017"
     networks:
-      - app-net
+      - samplebyjoe-net
     volumes:
-      - type: volume
-        source: app-mongo-data
-        target: /data/db
+      - mongo-data:/data/db
 
-#Creates the network infrastructure necessary for the containers to communicate with each other
+# === Docker Network Configuration ===
 networks:
-  app-net:
-    name: app-net
+  samplebyjoe-net:
+    name: samplebyjoe-net
     driver: bridge
     attachable: true
     ipam:
       config:
-        - subnet: 172.20.0.0/16 
-          ip_range: 172.20.0.0/16 
+        - subnet: 172.21.0.0/16
+          ip_range: 172.21.0.0/16
 
-#Creates a Docker volume that persists all the data stored in the database
+# === Persistent Storage for MongoDB ===
 volumes:
-  app-mongo-data:
+  mongo-data:
     driver: local
