@@ -13,7 +13,7 @@ services:
 
   # === Frontend Service ===
   samplebyjoe-client:
-    image: munene97/samplebyjoe-client:v1.0.0
+    image: munene97/samplebyjoe-client:v1.1.0
     build: ./client
     container_name: samplebyjoe-client
     stdin_open: true
@@ -27,7 +27,7 @@ services:
 
   # === Backend Service ===
   samplebyjoe-backend:
-    image: munene97/samplebyjoe-backend:v1.0.0
+    image: munene97/samplebyjoe-backend:v1.1.0
     build: ./backend
     container_name: samplebyjoe-backend
     stdin_open: true
