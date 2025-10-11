@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: joemunene/samplebyjoe-client:v1.0.0
+          image: munene97/samplebyjoe-client:v1.0.0
           command: ["npm", "start"] 
           ports:
             - containerPort: 5000
