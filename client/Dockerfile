@@ -1,5 +1,5 @@
 # Use an official Node runtime as a parent image
-FROM node:14-slim AS build
+FROM node:18-slim AS build
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
@@ -7,22 +7,23 @@ WORKDIR /usr/src/app
 # Copy the package.json and package-lock.json files to the container
 COPY package*.json ./
 
-# Install application dependencies
-RUN npm install
+# Install only production dependencies for faster caching
+RUN npm ci
 
-# Copy the rest of the application code to the container
+# Copy the rest of the app
 COPY . .
 
-FROM alpine:3.16.7
+# Build thReact app for production
+RUN npm run build
 
-WORKDIR /app
+# Run a lightweight NGINX server to serve the built files
+FROM nginx:alpine
 
-RUN apk update && apk add npm
-
-COPY --from=build /usr/src/app /app
+# Copy the built React files from the build stage
+COPY --from=build /app/build /usr/share/nginx/html
 
 # Expose the port the app runs on
 EXPOSE 3000
 
-# Define the command to run your app
-CMD ["npm", "start"]
+# Start NGINX
+CMD ["nginx", "-g", "daemon off;"]

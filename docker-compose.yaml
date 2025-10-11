@@ -3,6 +3,11 @@
 # application as microservices, alongside a MongoDB database.
 # All containers are networked together for seamless communication.
 
+# docker-compose.yaml-version recommended: "3.8". 
+# Note: Ensure Docker is installed and running on your machine to use this configuration.
+# Uncomment the version line if you want to specify a version explicitly.
+# NOTE: It has been commented out because Docker Compose v2 and above automatically detects file formart.
+# version: "3.8"
 
 services:
 
