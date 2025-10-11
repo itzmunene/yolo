@@ -13,7 +13,7 @@ RUN npm ci
 # Copy the rest of the app
 COPY . .
 
-# Build thReact app for production
+# Build the React app for production
 RUN npm run build
 
 # Run a lightweight NGINX server to serve the built files
