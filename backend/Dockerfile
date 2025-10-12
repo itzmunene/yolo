@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependencies using npm ci for reproducibility
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 # Copy the rest of the application code to the container
 COPY . .
@@ -16,8 +16,12 @@ COPY . .
 # Stage 2: Run the application using a lightweight Node image
 FROM node:18-alpine
 
-# Copy built files from the build stage
-COPY --from=build /usr/src/app /app
+# Set the working directory in the container
+WORKDIR /app
+
+# Environment variables for production
+ENV NODE_ENV=production
+ENV PORT=5000
 
 # Expose the port the app runs on
 EXPOSE 5000
