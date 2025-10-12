@@ -19,6 +19,9 @@ FROM node:18-alpine
 # Set the working directory in the container
 WORKDIR /app
 
+# Copy only the necessary files from the build stage
+COPY --from=build /usr/src/app /app
+
 # Environment variables for production
 ENV NODE_ENV=production
 ENV PORT=5000
