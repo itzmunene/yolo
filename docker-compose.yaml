@@ -19,7 +19,7 @@ services:
     stdin_open: true
     tty: true
     ports:
-      - "3000:3000"
+      - "3000:80" # Map port 80 in the container to port 3000 on the host
     depends_on:
       - samplebyjoe-backend
     networks:
@@ -33,6 +33,8 @@ services:
     stdin_open: true
     tty: true
     restart: always
+    environment:
+    - MONGODB_URI=mongodb://samplebyjoe-mongo:27017/yolomy # MongoDB connection string
     ports:
       - "5000:5000"
     depends_on:
@@ -42,14 +44,17 @@ services:
 
   # === MongoDB Database ===
   samplebyjoe-mongo:
-    image: mongo:6.0
-    container_name: samplebyjoe-mongo
+    image: mongo
+    container_name: app-mongo
     ports:
       - "27017:27017"
     networks:
       - samplebyjoe-net
     volumes:
-      - mongo-data:/data/db
+     - type: volume
+       source: app-mongo-data
+       target: /data/db
+
 
 # === Docker Network Configuration ===
 networks:
@@ -64,5 +69,5 @@ networks:
 
 # === Persistent Storage for MongoDB ===
 volumes:
-  mongo-data:
+  app-mongo-data:
     driver: local

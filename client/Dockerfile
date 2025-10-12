@@ -20,10 +20,10 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy the built React files from the build stage
-COPY --from=build /usr/src/app /usr/share/nginx/html
+COPY --from=build /usr/src/app/build /usr/share/nginx/html
 
-# Expose the port the app runs on
-EXPOSE 3000
+# Expose the NGINX port inside the container
+EXPOSE 80
 
 # Start NGINX
 CMD ["nginx", "-g", "daemon off;"]
