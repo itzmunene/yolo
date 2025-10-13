@@ -52,7 +52,7 @@ services:
       - samplebyjoe-net
     volumes:
      - type: volume
-       source: app-mongo-data
+       source: app-mongo-data # Persistent storage for MongoDB data
        target: /data/db
 
 
