@@ -66,12 +66,64 @@ The main bottleneck was image size and redundant build layers. Here’s how I tr
   ```dockerfile
   CMD ["nginx", "-g", "daemon off;"]
 
-![Alt text](Image/image v1.0.1.png)
+![Alt text](Images/imagev1.0.1.png)
 
-![Alt text](Image/image v1.0.0.png)
+![Alt text](Images/imagev1.0.0.png)
 
-![Alt text](Image/docker repo.png)
+![Alt text](Images/dockerrepo.png)
 
-![Alt text](Image/docker repo client.png)
+![Alt text](Images/dockerrepobackend.png)
 
-![Alt text](Image/docker repo client.png)
+![Alt text](Images/dockerrepoclient.png)
+
+## 🚀 Deployment Automation Summary
+
+To ensure a smooth deployment of the YOLO app, several adjustments were made to the **Ansible playbook** and **roles** configuration.
+
+### 🧠 Playbook Refinement
+The main playbook was updated to:
+- Automate **Docker installation** and configuration within the Vagrant VM.
+- Add Docker’s **GPG key and repository** to ensure compatibility with Ubuntu 20.04.
+- Include a pre-task to **create a Docker network (`samplebyjoe-net`)** for all containers to communicate seamlessly.
+- Ensure Docker services start automatically on boot.
+
+### 🧩 Roles Directory Overhaul
+Each role was refined to align with the Docker workflow:
+- **setup-mongodb** → Configured the MongoDB container with a persistent volume and connected it to the shared Docker network.
+- **backend-deployment** → Pulled the latest backend image and ran it on port 5000 with network linkage.
+- **frontend-deployment** → Deployed the React + NGINX container serving the build files on port 3000.
+
+All roles now depend on the same Docker bridge network, ensuring inter-container communication without exposing unnecessary ports.
+
+### 🧱 Infrastructure Improvements
+- Added a dedicated **Docker volume (`app-mongo-data`)** to maintain database persistence.
+- Simplified role dependencies by letting Ansible handle sequencing automatically via the playbook.
+- Ensured all Docker images pull from **Docker Hub** for consistent builds.
+
+### ✅ End Result
+The final setup creates an automated pipeline where:
+1. Vagrant provisions a clean Ubuntu VM.  
+2. Ansible installs and configures Docker.  
+3. The three app services (MongoDB, Backend, Frontend) deploy automatically in isolated containers.  
+4. Each service connects via the same Docker network for full app functionality.
+
+This structure mirrors a real-world microservice environment, allowing effortless redeployment, scaling, and updates from a single playbook command.
+
+![Alt text](Images/playbook.png)
+
+![Alt text](Images/vagrantdocker.png)
+
+
+### 🧩 Vagrant Port Forwarding Setup (Host ↔ VM Access)
+
+To access the YOLO app running inside Vagrant (the backend, frontend, and MongoDB containers), we had to configure **port forwarding** in the `Vagrantfile`.  
+
+By default, Vagrant maps the guest’s ports directly to your host — but since the host ( the pc hosting the VM) already had active listeners on ports **3000** and **5000**, the VM refused to boot.
+
+**Fix:** I just remapped them to avoid conflicts and keep things tidy.
+
+# Vagrantfile (network configuration section)
+config.vm.network "forwarded_port", guest: 3000, host: 3030
+config.vm.network "forwarded_port", guest: 5000, host: 5050
+
+![Alt text](Images/yolomyvagrant.png)
