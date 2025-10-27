@@ -1,0 +1,16 @@
+---
+- name: Pull frontend image
+  docker_image:
+    name: munene97/samplebyjoe-client:v1.1.0
+    source: pull
+
+- name: Run frontend container
+  docker_container:
+    name: samplebyjoe-client
+    image: munene97/samplebyjoe-client:v1.1.0
+    ports:
+      - "3000:80"
+    networks:
+      - name: samplebyjoe-net
+    restart_policy: always
+  become: yes

@@ -1,5 +1,5 @@
 ---
-- name: Ansible playbook to dockerize and run yolo e-commerce app using ansible
+- name: Deploy YOLO E-Commerce App
   hosts: all
   become: true
   
@@ -7,3 +7,11 @@
     - setup-mongodb
     - backend-deployment
     - frontend-deployment   
+
+  vars:
+    docker_network_name:
+      name: samplebyjoe-net
+      driver: bridge
+      attachable: true
+    docker_volume_name: 
+      name: app-mongo-data

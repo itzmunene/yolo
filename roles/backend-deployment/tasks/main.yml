@@ -1,16 +1,19 @@
 ---
-- name: Pull image from repository
+- name: Pull the backend Docker Image
   docker_image:
-    name: brianbwire/brian-yolo-backend:v1.0.0
+    name: munene97/samplebyjoe-backend:v1.1.0
     source: pull
 
-- name: Create Node.js Backend Container
+- name: Run Backend Container
   docker_container:
-    name: brian-yolo-backend
-    image: brianbwire/brian-yolo-backend:v1.0.0
+    name: samplebyjoe-backend
+    image: munene97/samplebyjoe-backend:v1.1.0
     networks:
-      - name: app-net
+      - name: samplebyjoe-net
     ports:
       - "5000:5000"
-    command: "npm start"
+    env:
+      MONGO_URI_PRODUCTION: mongodb://app-mongo:27017/yolomy
+      NODE_ENV: production
+    restart_policy: always
   become: yes
