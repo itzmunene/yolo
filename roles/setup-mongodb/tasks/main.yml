@@ -10,7 +10,7 @@
         source: app-mongo-data
         target: /data/db
     networks:
-      - name: app-net
+      - name: samplebyjoe-net
     restart_policy: always
   tags:
     - database
