@@ -13,7 +13,7 @@ spec:
       labels:
         app: yolo-backend
     spec:
-    containers:
+      containers:
         - name: backend
           image: munene97/samplebyjoe-backend:v1.1.1
           ports:
