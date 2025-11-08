@@ -1,0 +1,21 @@
+# Node modules
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Environment and config
+.env
+*.log
+
+# Local and system files
+.vscode
+.idea
+*.swp
+.DS_Store
+
+# Tests and docs (not needed for prod image)
+tests
+__tests__
+docs
+coverage

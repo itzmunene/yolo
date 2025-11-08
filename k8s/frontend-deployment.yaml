@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo-frontend
+  namespace: yolo-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yolo-frontend
+  template:
+    metadata:
+      labels:
+        app: yolo-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: munene97/samplebyjoe-client:v1.1.1
+          ports:
+            - containerPort: 80
+          env:
+            - name: REACT_APP_API_URL
+              value: "http://backend-service:5000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: yolo-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: yolo-frontend
+  ports:
+    - port: 80
+      targetPort: 80

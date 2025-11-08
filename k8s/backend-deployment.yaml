@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo-backend
+  namespace: yolo-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yolo-backend
+  template:
+    metadata:
+      labels:
+        app: yolo-backend
+    spec:
+    containers:
+        - name: backend
+          image: munene97/samplebyjoe-backend:v1.1.1
+          ports:
+            - containerPort: 5000
+          env:
+            - name: MONGO_URI
+              value: "mongodb://mongo:27017/darkroom"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: yolo-app
+spec:
+  type: ClusterIP
+  selector:
+    app: yolo-backend
+  ports:
+    - port: 5000
+      targetPort: 5000
