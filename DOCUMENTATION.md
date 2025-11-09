@@ -178,15 +178,7 @@ This folder contains all Kubernetes manifests for deploying the YOLO App.
 
 ---
 
-## 4️⃣ Git Workflow  
-- `main` → clean, working code.  
-- `kubernetes-deployment` → all Kubernetes YAMLs live here.  
-- Short, clear commits like `fix: update mongo uri` or `deploy: add backend service`.  
-- Everything version-controlled and easy to track 🧠  
-
----
-
-## 5️⃣ Debugging & Fixes  
+## 4️⃣ Debugging & Fixes  
 - Fixed the `MONGO_URI` vs `MONGODB_URI` mismatch.  
 - Cleaned up YAML syntax (metadata, spacing, etc.).  
 - Verified backend-to-Mongo connection (`mongodb://mongo:27017/darkroom`).  
@@ -194,6 +186,3 @@ This folder contains all Kubernetes manifests for deploying the YOLO App.
 ✅ All components now connect perfectly.  
 
 ---
-
-
-
