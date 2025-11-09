@@ -136,23 +136,7 @@ To keep MongoDB credentials and sensitive data secure, store them as **Kubernete
 
 This folder contains all Kubernetes manifests for deploying the YOLO App.
 
-| File | Purpose |
-|------|----------|
-| `namespace.yaml` | Defines the isolated Kubernetes namespace `yolo-app`. |
-| `mongo.yaml` | Deploys MongoDB as a **StatefulSet** with persistent storage |
-| `yolo-backend.yaml` | Deploys the Node.js backend using Docker image `munene97 samplebyjoe-backend:v1.1.1`. Connects to MongoDB via `MONGO_URI`. |
-| `yolo-frontend.yaml` | Deploys the React frontend, exposed externally |
-
-# 🧩 Explanation.md  
-
-## 1️⃣ Kubernetes Objects I Used  
-- **MongoDB → StatefulSet:** keeps data and pod identity stable so the DB doesn’t “forget who it is” after a restart.  
-- **Backend & Frontend → Deployments:** stateless and easy to scale or roll back.  
-- Each part has its own **ClusterIP** for internal traffic, while the frontend rocks a **LoadBalancer** to go public on GKE 🌍  
-
----
-
-## 2️⃣ Pod Exposure  
+## 1️⃣ Pod Exposure  
 - **Frontend:** exposed via `LoadBalancer` → gets a public IP → accessible from your browser.  
 - **Backend:** internal only with `ClusterIP` for secure communication.  
 - **MongoDB:** uses a **Headless Service** (`clusterIP: None`) for stable DNS-based connections.  
@@ -167,7 +151,7 @@ This folder contains all Kubernetes manifests for deploying the YOLO App.
 
 ---
 
-## 3️⃣ Persistent Storage  
+## 2️⃣ Persistent Storage  
 - MongoDB uses a **1Gi PVC** (GKE’s `standard` storage class).  
 - Data sticks around through restarts — no accidental data loss.  
 👉 If things vanish, it’s usually a Mongo URI or PVC binding issue.  
@@ -178,7 +162,7 @@ This folder contains all Kubernetes manifests for deploying the YOLO App.
 
 ---
 
-## 4️⃣ Debugging & Fixes  
+## 3️⃣ Debugging & Fixes  
 - Fixed the `MONGO_URI` vs `MONGODB_URI` mismatch.  
 - Cleaned up YAML syntax (metadata, spacing, etc.).  
 - Verified backend-to-Mongo connection (`mongodb://mongo:27017/darkroom`).  
@@ -186,3 +170,39 @@ This folder contains all Kubernetes manifests for deploying the YOLO App.
 ✅ All components now connect perfectly.  
 
 ---
+
+# 🚀 Final Setup
+
+The whole YOLO app is now cruising on **Google Kubernetes Engine (Autopilot)** — smooth, self-healing, and ready for showtime.  
+
+- **MongoDB** runs as a **StatefulSet** with a **PersistentVolumeClaim**, so your data stays put even if the pod decides to take a nap or move nodes.  
+- **Backend (Node.js + Express)** talks directly to Mongo through its service name `mongo` — no hardcoded IP drama.  
+- **Frontend (React)** and **Backend** communicate inside the cluster through **Services**, and Kubernetes quietly handles the networking magic behind the scenes.  
+- The **Frontend** rolls out to the world using a **LoadBalancer**, giving it an external IP for easy demo and grading access.  
+- The **Backend** was temporarily exposed with its own LoadBalancer — just long enough to confirm APIs were firing and frontend requests were landing.
+
+---
+
+## 💡 Heads Up
+
+Browser DNS drama — so frontend → backend requests from *outside* the cluster weren’t fully verifiable this round.  
+But don’t — backend logs confirm MongoDB is up, running, and keeping data safe.  
+So persistence? ✅  
+Just a minor build for the next version.  
+
+![Alt text](Images/databaseg.png)
+
+> 💻 **Live App:** http://<your-frontend-external-ip>  
+Everything’s containerised, deployed, and serving production. 🌩️
+
+---
+
+## ☁️ Temporary Fix: External IP Exposure
+
+For this version, the backend was exposed publicly via **LoadBalancer** — fast, effective, and demo-ready.  
+But for real-world deployment, that’s like leaving your Wi-Fi open | No Password-or password is password.
+
+### 🔒 Next version goals:
+- Add an **Ingress Controller** to route frontend + backend under one neat domain.  
+- Use **internal services** or an **NGINX reverse proxy** to handle `/api` calls safely.  
+- Layer in **CORS rules + authentication** so only approved traffic gets through. 
