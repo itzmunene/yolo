@@ -192,7 +192,7 @@ Just a minor build for the next version.
 
 ![Alt text](Images/databaseg.png)
 
-> 💻 **Live App:** http://http://34.79.89.19/
+> 💻 **Live App:** http://34.79.89.19/
 Everything’s containerised, deployed, and serving production. 🌩️
 
 ---
