@@ -145,13 +145,9 @@ This folder contains all Kubernetes manifests for deploying the YOLO App.
 | File | Purpose |
 |------|----------|
 | `namespace.yaml` | Defines the isolated Kubernetes namespace `yolo-app`. |
-| `mongo.yaml` | Deploys MongoDB as a **StatefulSet** with persistent storage (`1Gi` PVC) and a **headless service** for stable DNS resolution. |
-| `yolo-backend.yaml` | Deploys the Node.js backend using Docker image `munene97/samplebyjoe-backend:v1.1.1`. Connects to MongoDB via `MONGO_URI`. Includes probes for uptime monitoring. |
-| `yolo-frontend.yaml` | Deploys the React frontend, exposed via a **LoadBalancer service** to make it accessible externally. |
-| `secrets.yaml` *(optional)* | Stores credentials securely using Kubernetes Secrets for `MONGO_URI`. |
-| `networkpolicy.yaml` *(optional)* | Defines network isolation between backend and database pods. |
+| `mongo.yaml` | Deploys MongoDB as a **StatefulSet** with persistent storage |
+| `yolo-backend.yaml` | Deploys the Node.js backend using Docker image `munene97 samplebyjoe-backend:v1.1.1`. Connects to MongoDB via `MONGO_URI`. |
+| `yolo-frontend.yaml` | Deploys the React frontend, exposed externally |
 
-### 🧩 Workflow
-1. Create the namespace:
-   ```bash
-   kubectl apply -f k8s/namespace.yaml
+### Workflow
+

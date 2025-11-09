@@ -19,8 +19,8 @@ spec:
           ports:
             - containerPort: 5000
           env:
-            - name: MONGO_URI 
-              value: mongodb://mongo:27017/yolomy
+            - name: MONGODB_URI 
+              value: "mongodb://mongo:27017/yolomy"
           livenessProbe:
             httpGet:
               path: /api/health
