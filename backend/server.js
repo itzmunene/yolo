@@ -41,6 +41,11 @@ app.use(cors({
   allowedHeaders: ['Content-Type']
 }));
 
+// Health check route for probes and testing
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 // Use Route
 app.use('/api/products', productRoute)
 
@@ -50,8 +55,3 @@ const PORT = process.env.PORT || 5000
 app.listen(PORT, ()=>{
     console.log(`Server listening on port ${PORT}`)
 })
-
-// Health check route for probes and testing
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok' });
-});
