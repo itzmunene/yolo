@@ -13,7 +13,7 @@ spec:
       labels:
         app: yolo-backend
     spec:
-      containers:
+        containers:
         - name: backend
           image: munene97/samplebyjoe-backend:v1.1.1
           ports:
@@ -21,18 +21,6 @@ spec:
           env:
             - name: MONGODB_URI 
               value: "mongodb://mongo:27017/yolomy"
-          livenessProbe:
-            httpGet:
-              path: /api/health
-              port: 5000
-            initialDelaySeconds: 15
-            periodSeconds: 30
-          readinessProbe:
-            httpGet:
-              path: /api/health
-              port: 5000
-            initialDelaySeconds: 10
-            periodSeconds: 15
 ---
 apiVersion: v1
 kind: Service
