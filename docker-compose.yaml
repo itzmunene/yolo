@@ -13,7 +13,7 @@ services:
 
   # === Frontend Service ===
   samplebyjoe-client:
-    image: munene97/samplebyjoe-client:v1.1.1
+    image: munene97/samplebyjoe-client:v1.1.2
     build: ./client
     container_name: samplebyjoe-client
     stdin_open: true

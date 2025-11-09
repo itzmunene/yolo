@@ -1,13 +1,13 @@
 ---
 - name: Pull frontend image
   docker_image:
-    name: munene97/samplebyjoe-client:v1.1.0
+    name: munene97/samplebyjoe-client:v1.1.2
     source: pull
 
 - name: Run frontend container
   docker_container:
     name: samplebyjoe-client
-    image: munene97/samplebyjoe-client:v1.1.0
+    image: munene97/samplebyjoe-client:v1.1.2
     ports:
       - "3000:80"
     networks:

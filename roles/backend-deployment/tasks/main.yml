@@ -1,13 +1,13 @@
 ---
 - name: Pull the backend Docker Image
   docker_image:
-    name: munene97/samplebyjoe-backend:v1.1.0
+    name: munene97/samplebyjoe-backend:v1.1.2
     source: pull
 
 - name: Run Backend Container
   docker_container:
     name: samplebyjoe-backend
-    image: munene97/samplebyjoe-backend:v1.1.0
+    image: munene97/samplebyjoe-backend:v1.1.2
     networks:
       - name: samplebyjoe-net
     ports:
