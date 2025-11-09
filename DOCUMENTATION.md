@@ -127,3 +127,31 @@ config.vm.network "forwarded_port", guest: 3000, host: 3030
 config.vm.network "forwarded_port", guest: 5000, host: 5050
 
 ![Alt text](Images/yolomyvagrant.png)
+
+## 🔐 Kubernetes Secrets & Environment Configuration
+
+To keep MongoDB credentials and sensitive data secure, store them as **Kubernetes Secrets** instead of hardcoding in YAML files.
+
+### 1️⃣ Create a Secret for MongoDB URI
+```bash
+kubectl create secret generic mongo-secret \
+  --from-literal=MONGO_URI="mongodb+srv://<username>:<password>@cluster.mongodb.net/darkroom" \
+  -n yolo-app
+
+## 🗂️ Kubernetes Configuration (k8s/ Folder)
+
+This folder contains all Kubernetes manifests for deploying the YOLO App.
+
+| File | Purpose |
+|------|----------|
+| `namespace.yaml` | Defines the isolated Kubernetes namespace `yolo-app`. |
+| `mongo.yaml` | Deploys MongoDB as a **StatefulSet** with persistent storage (`1Gi` PVC) and a **headless service** for stable DNS resolution. |
+| `yolo-backend.yaml` | Deploys the Node.js backend using Docker image `munene97/samplebyjoe-backend:v1.1.1`. Connects to MongoDB via `MONGO_URI`. Includes probes for uptime monitoring. |
+| `yolo-frontend.yaml` | Deploys the React frontend, exposed via a **LoadBalancer service** to make it accessible externally. |
+| `secrets.yaml` *(optional)* | Stores credentials securely using Kubernetes Secrets for `MONGO_URI`. |
+| `networkpolicy.yaml` *(optional)* | Defines network isolation between backend and database pods. |
+
+### 🧩 Workflow
+1. Create the namespace:
+   ```bash
+   kubectl apply -f k8s/namespace.yaml
