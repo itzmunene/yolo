@@ -132,12 +132,6 @@ config.vm.network "forwarded_port", guest: 5000, host: 5050
 
 To keep MongoDB credentials and sensitive data secure, store them as **Kubernetes Secrets** instead of hardcoding in YAML files.
 
-### 1️⃣ Create a Secret for MongoDB URI
-```bash
-kubectl create secret generic mongo-secret \
-  --from-literal=MONGO_URI="mongodb+srv://<username>:<password>@cluster.mongodb.net/darkroom" \
-  -n yolo-app
-
 ## 🗂️ Kubernetes Configuration (k8s/ Folder)
 
 This folder contains all Kubernetes manifests for deploying the YOLO App.
@@ -149,5 +143,57 @@ This folder contains all Kubernetes manifests for deploying the YOLO App.
 | `yolo-backend.yaml` | Deploys the Node.js backend using Docker image `munene97 samplebyjoe-backend:v1.1.1`. Connects to MongoDB via `MONGO_URI`. |
 | `yolo-frontend.yaml` | Deploys the React frontend, exposed externally |
 
-### Workflow
+# 🧩 Explanation.md  
+
+## 1️⃣ Kubernetes Objects I Used  
+- **MongoDB → StatefulSet:** keeps data and pod identity stable so the DB doesn’t “forget who it is” after a restart.  
+- **Backend & Frontend → Deployments:** stateless and easy to scale or roll back.  
+- Each part has its own **ClusterIP** for internal traffic, while the frontend rocks a **LoadBalancer** to go public on GKE 🌍  
+
+---
+
+## 2️⃣ Pod Exposure  
+- **Frontend:** exposed via `LoadBalancer` → gets a public IP → accessible from your browser.  
+- **Backend:** internal only with `ClusterIP` for secure communication.  
+- **MongoDB:** uses a **Headless Service** (`clusterIP: None`) for stable DNS-based connections.  
+
+---
+
+![Alt text](Images/gcloudpods.png)
+
+---
+
+![Alt text](Images/yoloservice.png)
+
+---
+
+## 3️⃣ Persistent Storage  
+- MongoDB uses a **1Gi PVC** (GKE’s `standard` storage class).  
+- Data sticks around through restarts — no accidental data loss.  
+👉 If things vanish, it’s usually a Mongo URI or PVC binding issue.  
+
+---
+
+![Alt text](Images/gcloudyolo.png)
+
+---
+
+## 4️⃣ Git Workflow  
+- `main` → clean, working code.  
+- `kubernetes-deployment` → all Kubernetes YAMLs live here.  
+- Short, clear commits like `fix: update mongo uri` or `deploy: add backend service`.  
+- Everything version-controlled and easy to track 🧠  
+
+---
+
+## 5️⃣ Debugging & Fixes  
+- Fixed the `MONGO_URI` vs `MONGODB_URI` mismatch.  
+- Cleaned up YAML syntax (metadata, spacing, etc.).  
+- Verified backend-to-Mongo connection (`mongodb://mongo:27017/darkroom`).  
+- Checked PVC binding in GKE Autopilot (`storageClassName: standard-rwo`).  
+✅ All components now connect perfectly.  
+
+---
+
+
 
